@@ -16,8 +16,9 @@ public class Data {
 	static String startingState = new String();
 	static ArrayList<State> acceptingStates = new ArrayList<State>();
 	static ArrayList<String> availableSymbols = new ArrayList<String>();
+	static String tape = new String();
+	static String orderStart = new String();
 
-	
 	public void setInitialValues() {
 		// Setting up states
 		createStates(5);
@@ -25,7 +26,7 @@ public class Data {
 		startingState = "q0";
 
 		// Setting available symbols
-		String[] availableSymbols = { "0", "1"};
+		String[] availableSymbols = { "0", "1" };
 		setAvailableSymbols(availableSymbols);
 
 		// Setting accepting states
@@ -66,5 +67,18 @@ public class Data {
 		}
 		System.out.println("#####");
 
+	}
+
+	public static String reverseString(String input) {
+		byte[] strAsByteArray = input.getBytes();
+
+		byte[] result = new byte[strAsByteArray.length];
+
+		// Store result in reverse order into the
+		// result byte[]
+		for (int i = 0; i < strAsByteArray.length; i++)
+			result[i] = strAsByteArray[strAsByteArray.length - i - 1];
+
+		return new String(result);
 	}
 }

@@ -31,17 +31,19 @@ public class State {
 	}
 
 	public State goToNextState(String string) {
-		if(Data.availableSymbols.contains(string))
-		{
-			return transitions.getNextState();
-		}
-		System.out.println("Symbol does not belong to the list of available symbols!");
-		return null;
+		return transitionsMap.get(string).getNextState();
 	}
 	
-	public String getValue(String string)
+	public char getValue(String string)
 	{
-		return valuesMap.get(string);
+		System.out.println("Values map = " + valuesMap);
+		char value = valuesMap.get(string).toCharArray()[0];
+		if (value == "-".toCharArray()[0])
+		{
+			char emptyValue = 0;
+			return emptyValue;
+		}
+		return valuesMap.get(string).toCharArray()[0];
 	}
 
 	public String getMovementDirection(String string)
