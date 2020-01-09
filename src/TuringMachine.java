@@ -6,7 +6,9 @@ public class TuringMachine {
 		Data data = new Data();
 		data.setInitialValues();
 		data.orderStart = "R";
-		start();
+		//start();
+		
+		new GUI();
 	}
 
 	public static void start() {
