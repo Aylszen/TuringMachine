@@ -10,7 +10,6 @@ class MyTableCellRender extends DefaultTableCellRenderer {
 
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
 			int row, int column) {
-		System.out.println("MyTableCellRender weszlo, comunt = " + column + " iterator = " + Data.iterator);
 		if (Data.startColoring) {
 			if (column == Data.iterator + 1) {
 				setBackground(Color.yellow);

@@ -36,7 +36,6 @@ public class State {
 	
 	public char getValue(String string)
 	{
-		System.out.println("Values map = " + valuesMap);
 		char value = valuesMap.get(string).toCharArray()[0];
 		if (value == "-".toCharArray()[0])
 		{

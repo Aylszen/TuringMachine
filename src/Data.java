@@ -23,6 +23,7 @@ public class Data {
 	static int iterator;
 	static int tapeLength;
 	static boolean startColoring = false;
+	static String statePath;
 	public void setInitialValues() {
 		// Setting up states
 		createStates(5);
@@ -45,6 +46,7 @@ public class Data {
 		
 		currentState = listAllStatesMap.get(startingState);
 		iterator = 0;
+		statePath = new String();
 	}
 
 	public void createStates(int numberOfStates) {
@@ -88,5 +90,21 @@ public class Data {
 			result[i] = strAsByteArray[strAsByteArray.length - i - 1];
 
 		return new String(result);
+	}
+	
+	public static void updateStatePath()
+	{
+		if (!Data.acceptingStates.contains(Data.currentState))
+		{
+			Data.statePath += "(" + Data.currentState.toString() + ")";
+		}
+		else
+		{
+			Data.statePath += "((" + Data.currentState.toString() + "))";
+		}
+		if (Data.iterator >= 0 && Data.iterator < Data.tapeLength)
+		{
+			Data.statePath += "-->";
+		}
 	}
 }

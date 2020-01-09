@@ -19,58 +19,61 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 public class GUI {
-    static JTextField dataTextField; 
-    static JFrame jFrame; 
-    static JButton submitButton;
-    static JButton oneStepButton;
-    static JButton automaticButton; 
-    static JLabel enteredDataLabel;
-    static JLabel dataLabel;
-    static JLabel currentStateLabel;
-    static JTable dataTable;
-    static JPanel firstPanel;
-    static JPanel secondPanel;
-    static JPanel thirdPanel;
-    static JScrollPane sp;
-    static JPanel fourthPanel;
-    static DefaultTableModel dm;
-    static int place;
-	public GUI()
-	{
-        jFrame = new JFrame("Turing Machine");
-        enteredDataLabel = new JLabel("No Data entered");
-        dataLabel = new JLabel("Number:");
-        currentStateLabel = new JLabel();
-        dataTextField = new JTextField(); 
-        submitButton = new JButton("Submit"); 
-        oneStepButton = new JButton("One step");
-        automaticButton = new JButton("Automatic");
-        firstPanel = new JPanel();
-        secondPanel = new JPanel();
-        thirdPanel = new JPanel();
-        fourthPanel = new JPanel();
-        dm = new DefaultTableModel(0, 0);
-		dataTable = new JTable(); 
+	static JTextField dataTextField;
+	static JFrame jFrame;
+	static JButton submitButton;
+	static JButton oneStepButton;
+	static JButton automaticButton;
+	static JLabel enteredDataLabel;
+	static JLabel dataLabel;
+	static JLabel currentStateLabel;
+	static JLabel statePathLabel;
+	static JTable dataTable;
+	static JPanel firstPanel;
+	static JPanel secondPanel;
+	static JPanel thirdPanel;
+	static JScrollPane sp;
+	static JPanel fourthPanel;
+	static JPanel fifthPanel;
+	static DefaultTableModel dm;
+	static int place;
+
+	public GUI() {
+		jFrame = new JFrame("Turing Machine");
+		enteredDataLabel = new JLabel("No Data entered");
+		dataLabel = new JLabel("Number:");
+		currentStateLabel = new JLabel();
+		dataTextField = new JTextField();
+		submitButton = new JButton("Submit");
+		oneStepButton = new JButton("One step");
+		automaticButton = new JButton("Automatic");
+		firstPanel = new JPanel();
+		secondPanel = new JPanel();
+		thirdPanel = new JPanel();
+		fourthPanel = new JPanel();
+		fifthPanel = new JPanel();
+		dm = new DefaultTableModel(0, 0);
+		dataTable = new JTable();
+		statePathLabel = new JLabel();
 		dataTable.setDefaultRenderer(Object.class, new MyTableCellRender());
-        
-        firstPanel.setLayout(new BoxLayout(firstPanel, BoxLayout.PAGE_AXIS));
-        firstPanel.add(dataTextField, BorderLayout.NORTH);
 
-        secondPanel.setLayout(new GridLayout(1,3));
-        secondPanel.add(submitButton);
-        secondPanel.add(dataLabel);
-        dataLabel.setHorizontalAlignment(JLabel.CENTER);
-        secondPanel.add(enteredDataLabel);
+		firstPanel.setLayout(new BoxLayout(firstPanel, BoxLayout.PAGE_AXIS));
+		firstPanel.add(dataTextField, BorderLayout.NORTH);
 
-        thirdPanel.setLayout(new GridLayout(1,3));
-        thirdPanel.add(currentStateLabel);
-        thirdPanel.add(oneStepButton);
-        thirdPanel.add(automaticButton);
-        
-        submitButton.addActionListener(new ActionListener() {
+		secondPanel.setLayout(new GridLayout(1, 3));
+		secondPanel.add(submitButton);
+		secondPanel.add(dataLabel);
+		dataLabel.setHorizontalAlignment(JLabel.CENTER);
+		secondPanel.add(enteredDataLabel);
+
+		thirdPanel.setLayout(new GridLayout(1, 3));
+		thirdPanel.add(currentStateLabel);
+		thirdPanel.add(oneStepButton);
+		thirdPanel.add(automaticButton);
+
+		submitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Data: " + dataTextField.getText());
 				enteredDataLabel.setText(dataTextField.getText());
 				fillUpTable(dataTextField.getText());
 				Data.tape = dataTextField.getText();
@@ -82,10 +85,12 @@ public class GUI {
 					Data.iterator = 0;
 				}
 				currentStateLabel.setText(Data.currentState.toString());
+				Data.statePath = "(" + Data.currentState.toString() + ")-->";
 				Data.startColoring = true;
+				statePathLabel.setText("");
 			}
 		});
-        
+
 		automaticButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -94,40 +99,49 @@ public class GUI {
 		});
 
 		oneStepButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (Data.iterator >= 0 && Data.iterator < Data.tapeLength)
-				{
+				if (Data.iterator >= 0 && Data.iterator < Data.tapeLength) {
 					TuringMachine.start2(enteredDataLabel.getText(), dataTable, currentStateLabel);
-			        refreshColors();
+					refreshColors();
+					if (!(Data.iterator >= 0 && Data.iterator < Data.tapeLength)) {
+						statePathLabel.setText(Data.statePath);
+						statePathLabel.revalidate();
+						fifthPanel.revalidate();
+					}
 				}
+
 			}
 		});
 
-        fourthPanel.setLayout(new BoxLayout(fourthPanel, BoxLayout.PAGE_AXIS));
+		fourthPanel.setLayout(new BoxLayout(fourthPanel, BoxLayout.PAGE_AXIS));
 
-        dataTable.setTableHeader(null);
-        String header[] = new String[] { " ", " "};
-        dm.setColumnIdentifiers(header);
-        dataTable.setModel(dm);
-        fillUpTable("no data");
-        sp = new JScrollPane(dataTable);
-        fourthPanel.add(sp);
-        
-        jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.PAGE_AXIS));
-        // add panel to frame
-        jFrame.add(firstPanel);
-        jFrame.add(secondPanel);
-        jFrame.add(thirdPanel);
-        jFrame.add(fourthPanel);
-  
-        // set the size of frame 
-        jFrame.setSize(400, 300); 
-  
-        jFrame.show(); 
+		dataTable.setTableHeader(null);
+		String header[] = new String[] { " ", " " };
+		dm.setColumnIdentifiers(header);
+		dataTable.setModel(dm);
+		fillUpTable("no data");
+		sp = new JScrollPane(dataTable);
+		fourthPanel.add(sp);
+
+		fifthPanel.setLayout(new GridLayout(1, 1));
+		fifthPanel.add(statePathLabel);
+		statePathLabel.setHorizontalAlignment(JLabel.CENTER);
+
+		jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.PAGE_AXIS));
+		// add panel to frame
+		jFrame.add(firstPanel);
+		jFrame.add(secondPanel);
+		jFrame.add(thirdPanel);
+		jFrame.add(fourthPanel);
+		jFrame.add(fifthPanel);
+		// set the size of frame
+		jFrame.setSize(400, 300);
+
+		jFrame.show();
 	}
-	
+
 	public void fillUpTable(String data) {
 		String[] dataArr = data.split("");
 		dm.setColumnIdentifiers(dataArr);
@@ -145,15 +159,14 @@ public class GUI {
 
 		thirdPanel.revalidate();
 	}
-	
+
 	public void refreshColors() {
-        //To refresh colors...
-        for (int i = 0; i <Data.tapeLength; i++)
-        {
+		// To refresh colors...
+		for (int i = 0; i < Data.tapeLength; i++) {
 			String dataFromTable = String.valueOf(dataTable.getValueAt(0, i));
-        	dataTable.setValueAt(dataFromTable, 0, i);
-        }
-        //
+			dataTable.setValueAt(dataFromTable, 0, i);
+		}
+		//
 	}
 
 }

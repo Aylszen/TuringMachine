@@ -23,7 +23,6 @@ public class TuringMachine {
 				Data.currentState = tempNewState;
 				currentStateLabel.setText(Data.currentState.toString());
 				jtable.setValueAt(newValue, 0, Data.iterator);
-				
 				if (movementDirection.contains("L")) {
 					Data.iterator--;
 				} else if (movementDirection.contains("R")) {
@@ -31,6 +30,7 @@ public class TuringMachine {
 				} else {
 					Data.iterator--;
 				}
+				Data.updateStatePath();
 			}
 		}
 	
