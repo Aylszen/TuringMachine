@@ -18,7 +18,10 @@ public class Data {
 	static ArrayList<String> availableSymbols = new ArrayList<String>();
 	static String tape = new String();
 	static String orderStart = new String();
-
+	static boolean isBegin = true;
+	static State currentState;
+	static int iterator;
+	static int tapeLength;
 	public void setInitialValues() {
 		// Setting up states
 		createStates(5);
@@ -37,6 +40,9 @@ public class Data {
 		setTransitions("q2", "0;0,q4,L 1;1,q4,L ~;0,q4,L");
 		setTransitions("q3", "0;0,q3,L 1;1,q3,L ~;-,q3,-");
 		setTransitions("q4", "0;1,q3,L 1;0,q4,L ~;1,q3,-");
+		
+		currentState = listAllStatesMap.get(startingState);
+		iterator = 0;
 	}
 
 	public void createStates(int numberOfStates) {

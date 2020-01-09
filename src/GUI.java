@@ -18,7 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-public class GUI implements ActionListener{
+public class GUI {
     static JTextField dataTextField; 
     static JFrame jFrame; 
     static JButton submitButton;
@@ -34,6 +34,7 @@ public class GUI implements ActionListener{
     static JScrollPane sp;
     static JPanel fourthPanel;
     static DefaultTableModel dm;
+    static int place;
 	public GUI()
 	{
         jFrame = new JFrame("Turing Machine");
@@ -70,17 +71,36 @@ public class GUI implements ActionListener{
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Data: " + dataTextField.getText());
 				enteredDataLabel.setText(dataTextField.getText());
-	            fillUpTable(dataTextField.getText());
+				fillUpTable(dataTextField.getText());
+				Data.tape = dataTextField.getText();
+				Data.tapeLength = Data.tape.length();
+				Data.currentState = Data.listAllStatesMap.get(Data.startingState);
+				if (Data.orderStart.contentEquals("R") == true) {
+					Data.iterator = Data.tapeLength - 1;
+				} else if (Data.orderStart.contentEquals("L") == true) {
+					Data.iterator = 0;
+				}
+				currentStateLabel.setText(Data.currentState.toString());
 			}
 		});
         
-        automaticButton.addActionListener(new ActionListener() {
+		automaticButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				TuringMachine.start();
+
 			}
 		});
 
+		oneStepButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (Data.iterator >= 0 && Data.iterator < Data.tapeLength)
+				{
+					TuringMachine.start2(enteredDataLabel.getText(), dataTable, currentStateLabel);					
+				}
+			}
+		});
 
         fourthPanel.setLayout(new BoxLayout(fourthPanel, BoxLayout.PAGE_AXIS));
 
@@ -88,12 +108,7 @@ public class GUI implements ActionListener{
         String header[] = new String[] { " ", " "};
         dm.setColumnIdentifiers(header);
         dataTable.setModel(dm);
-        
-        Vector<Object> data = new Vector<Object>();
-        data.add("test");
-        data.add("test2");
-
-        dm.addRow(data);
+        fillUpTable("no data");
         sp = new JScrollPane(dataTable);
         fourthPanel.add(sp);
         
@@ -109,26 +124,16 @@ public class GUI implements ActionListener{
   
         jFrame.show(); 
 	}
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		String s = e.getActionCommand(); 
-        if (s.equals("Submit")) {
-    		System.out.println("Weszlo");
-            // set the text of the label to the text of the field 
-            enteredDataLabel.setText(dataTextField.getText()); 
-            // set the text of field to blank 
-            dataTextField.setText("  ");
-        } 		
-	}
 	
 	public void fillUpTable(String data)
 	{
-		String [] dataArr = data.split("");
+		String[] dataArr = data.split("");
 		dm.setColumnIdentifiers(dataArr);
-		dm.removeRow(0);
-        Vector<Object> rowData = new Vector<Object>();
-		for (int i=0; i<data.length(); i++)
-		{
+		if (dm.getRowCount() > 0) {
+			dm.removeRow(0);
+		}
+		Vector<Object> rowData = new Vector<Object>();
+		for (int i = 0; i < data.length(); i++) {
 			rowData.add(data.charAt(i));
 		}
         dm.addRow(rowData);
