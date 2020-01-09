@@ -51,6 +51,7 @@ public class GUI {
         fourthPanel = new JPanel();
         dm = new DefaultTableModel(0, 0);
 		dataTable = new JTable(); 
+		dataTable.setDefaultRenderer(Object.class, new MyTableCellRender());
         
         firstPanel.setLayout(new BoxLayout(firstPanel, BoxLayout.PAGE_AXIS));
         firstPanel.add(dataTextField, BorderLayout.NORTH);
@@ -81,6 +82,7 @@ public class GUI {
 					Data.iterator = 0;
 				}
 				currentStateLabel.setText(Data.currentState.toString());
+				Data.startColoring = true;
 			}
 		});
         
@@ -97,7 +99,8 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {
 				if (Data.iterator >= 0 && Data.iterator < Data.tapeLength)
 				{
-					TuringMachine.start2(enteredDataLabel.getText(), dataTable, currentStateLabel);					
+					TuringMachine.start2(enteredDataLabel.getText(), dataTable, currentStateLabel);
+			        refreshColors();
 				}
 			}
 		});
@@ -125,8 +128,7 @@ public class GUI {
         jFrame.show(); 
 	}
 	
-	public void fillUpTable(String data)
-	{
+	public void fillUpTable(String data) {
 		String[] dataArr = data.split("");
 		dm.setColumnIdentifiers(dataArr);
 		if (dm.getRowCount() > 0) {
@@ -136,8 +138,22 @@ public class GUI {
 		for (int i = 0; i < data.length(); i++) {
 			rowData.add(data.charAt(i));
 		}
-        dm.addRow(rowData);
-        dm.fireTableDataChanged();
-        thirdPanel.revalidate();
+		dm.addRow(rowData);
+		dm.fireTableDataChanged();
+		dataTable.revalidate();
+		dataTable.repaint();
+
+		thirdPanel.revalidate();
+	}
+	
+	public void refreshColors() {
+        //To refresh colors...
+        for (int i = 0; i <Data.tapeLength; i++)
+        {
+			String dataFromTable = String.valueOf(dataTable.getValueAt(0, i));
+        	dataTable.setValueAt(dataFromTable, 0, i);
         }
+        //
+	}
+
 }

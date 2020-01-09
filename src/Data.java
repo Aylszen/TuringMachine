@@ -22,11 +22,13 @@ public class Data {
 	static State currentState;
 	static int iterator;
 	static int tapeLength;
+	static boolean startColoring = false;
 	public void setInitialValues() {
 		// Setting up states
 		createStates(5);
 		// Setting starting state
 		startingState = "q0";
+		orderStart = "R";
 
 		// Setting available symbols
 		String[] availableSymbols = { "0", "1" };

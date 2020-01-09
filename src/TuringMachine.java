@@ -1,17 +1,17 @@
+
 import java.util.Scanner;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.table.TableCellRenderer;
 
 public class TuringMachine {
 
 	public static void main(String[] args) {
 		Data data = new Data();
 		data.setInitialValues();
-		data.orderStart = "R";
-		//start();
 		
-		GUI gui = new GUI();
+		new GUI();
 	}
 
 	public static void start2(String dataTape, JTable jtable, JLabel currentStateLabel) {
