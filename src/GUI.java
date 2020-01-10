@@ -37,8 +37,11 @@ public class GUI {
 	static JPanel fifthPanel;
 	static DefaultTableModel dm;
 	static int place;
+	static boolean isRunning = false;
 
 	public GUI() {
+		Data data = new Data();
+		data.setInitialValues();
 		jFrame = new JFrame("Turing Machine");
 		enteredDataLabel = new JLabel("No Data entered");
 		dataLabel = new JLabel("Number:");
@@ -88,13 +91,45 @@ public class GUI {
 				Data.statePath = "(" + Data.currentState.toString() + ")-->";
 				Data.startColoring = true;
 				statePathLabel.setText("");
+				isRunning = false;
 			}
 		});
 
 		automaticButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				isRunning = true;
+				Thread thread = new Thread(new Runnable() {
+					public void run() {
+						int sleepTime = 4000;
+						try {
+							Thread.sleep(sleepTime);
+						} catch (InterruptedException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						while (isRunning) {
+							if (Data.iterator >= 0 && Data.iterator < Data.tapeLength) {
+								TuringMachine.start2(enteredDataLabel.getText(), dataTable, currentStateLabel, data);
+								refreshColors();
+								if (!(Data.iterator >= 0 && Data.iterator < Data.tapeLength)) {
+									statePathLabel.setText(Data.statePath);
+									statePathLabel.revalidate();
+									fifthPanel.revalidate();
+								}
+								try {
+									Thread.sleep(sleepTime);
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							} else {
+								isRunning = false;
+							}
+						}
+					}
+				});
+				thread.start();
 			}
 		});
 
@@ -103,7 +138,7 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (Data.iterator >= 0 && Data.iterator < Data.tapeLength) {
-					TuringMachine.start2(enteredDataLabel.getText(), dataTable, currentStateLabel);
+					TuringMachine.start2(enteredDataLabel.getText(), dataTable, currentStateLabel, data);
 					refreshColors();
 					if (!(Data.iterator >= 0 && Data.iterator < Data.tapeLength)) {
 						statePathLabel.setText(Data.statePath);
