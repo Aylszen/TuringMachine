@@ -78,9 +78,19 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				enteredDataLabel.setText(dataTextField.getText());
-				fillUpTable(dataTextField.getText());
-				Data.tape = dataTextField.getText();
-				Data.tapeLength = Data.tape.length();
+				String tempTapeString = dataTextField.getText();
+				if (Data.orderStart.contentEquals("R") == true) {
+					if (tempTapeString.length() == 1 && tempTapeString.contains("1")) {
+						Data.tape = "~~" + tempTapeString;
+						Data.tapeLength = Data.tape.length();
+					} else {
+						Data.tape = "~" + tempTapeString;
+						Data.tapeLength = Data.tape.length();
+					}
+				} else if (Data.orderStart.contentEquals("L") == true) {
+					//
+				}
+				fillUpTable(Data.tape);
 				Data.currentState = Data.listAllStatesMap.get(Data.startingState);
 				if (Data.orderStart.contentEquals("R") == true) {
 					Data.iterator = Data.tapeLength - 1;
